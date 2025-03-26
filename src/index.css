@@ -1,0 +1,29 @@
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'DM Sans';
+  background-color: #fffefc;
+
+  --black-color: #0C0C0C;
+}
+
+body {
+  color: var(--black-color);
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('./assets/fonts/DMSans-VariableFont_opsz,wght.ttf');
+}
+
+@font-face {
+  font-family: 'IBM Plex Serif Bold';
+  src: url('./assets/fonts/IBMPlexSerif-BoldItalic.ttf');
+}
+
+::selection {
+  background-color: #ae4bff;
+  color: white;
+}
