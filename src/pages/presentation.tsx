@@ -5,6 +5,8 @@ import { CheckCheck } from "lucide-react";
 import { Copy } from "lucide-react";
 import { SquarePlus } from "lucide-react";
 import { Trash2 } from "lucide-react";
+import { socketService } from "../services/socket";
+import { useEffect } from "react";
 
 export const Presentation = () => {
 
@@ -12,6 +14,10 @@ export const Presentation = () => {
         const div = e.currentTarget;
         div.setAttribute('data-empty', div.textContent?.trim() === '' ? 'true' : 'false');
     };
+
+    useEffect(() => {
+        socketService.handleSomething();
+    }, [])
 
     return (
         <div className="presentation">
