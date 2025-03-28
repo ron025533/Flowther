@@ -1,15 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { socketService } from "../services/socket";
 import "./home.css";
 import { ArrowUpRight } from "lucide-react";
 
 export const Home = () => {
+    const [clientId, setClientId] = useState('');
+    const [presentation, setPresentation] = useState('');
+
     const handleClick = () => {
-        socketService.handleMessaging("test test test");
+        socketService.sendMessage("test test test");
     }
+
+    const handleJoin = () => {
+        socketService.JoinPresentation({clientId: clientId, presentation: presentation});
+    }
+
 
     useEffect(() => {
         socketService.receiveMessage();
+        socketService.JoinedPresentation();
     },[]);
 
     return (
@@ -35,6 +44,9 @@ export const Home = () => {
                 </div>
             </div>
             <button onClick={handleClick}>test</button>
+            <input type="text" value={clientId} onChange={(e) => setClientId(e.target.value)}/>
+            <input type="text" value={presentation} onChange={(e) => setPresentation(e.target.value)}/>
+            <button onClick={handleJoin}>Join presentation</button>
         </div>
     );
 };
