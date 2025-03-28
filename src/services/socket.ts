@@ -9,10 +9,16 @@ class SocketService {
         this.socket = io(SOCKET_URL);
     }
 
-    handleSomething() {
-        console.log('something');
+    receiveMessage() {
+        this.socket.on('message', (data) => {
+            console.log('message:',data);
+        })
     }
-} 
+
+    handleMessaging(message: string) {
+        this.socket.emit('message', message);
+    }
+}
 
 export const socketService = new SocketService();
 // export default socketService;

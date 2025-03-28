@@ -1,7 +1,16 @@
+import { useEffect } from "react";
+import { socketService } from "../services/socket";
 import "./home.css";
 import { ArrowUpRight } from "lucide-react";
 
 export const Home = () => {
+    const handleClick = () => {
+        socketService.handleMessaging("test test test");
+    }
+
+    useEffect(() => {
+        socketService.receiveMessage();
+    },[]);
 
     return (
         <div className="home">
@@ -25,6 +34,7 @@ export const Home = () => {
                     <div className="presentation-block">Offen</div>
                 </div>
             </div>
+            <button onClick={handleClick}>test</button>
         </div>
     );
 };
