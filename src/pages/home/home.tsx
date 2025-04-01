@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { socketService } from "../services/socket";
+import { socketService } from "../../services/socket";
 import "./home.css";
 import { ArrowUpRight } from "lucide-react";
 
