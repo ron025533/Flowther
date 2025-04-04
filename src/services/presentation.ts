@@ -11,6 +11,16 @@ export const create = async (presentation: Presentation): Promise<Presentation> 
         throw e;
     }
 }
+//services/presentation.ts
+export const update = async (id: string, presentation: Presentation): Promise<Presentation> => {
+    try {
+        const response: AxiosResponse<Presentation> = await axios.put(`${BACKEND_API_URL}/presentation/update/${id}`, presentation);
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
 
 export const findAll = async (): Promise<Presentation[]> => {
     try {
