@@ -43,10 +43,6 @@ export const Home = () => {
                     <div className="presentation-block">Offen</div>
                 </div>
             </div>
-            <button onClick={handleClick}>test</button>
-            <input type="text" value={clientId} onChange={(e) => setClientId(e.target.value)}/>
-            <input type="text" value={presentation} onChange={(e) => setPresentation(e.target.value)}/>
-            <button onClick={handleJoin}>Join presentation</button>
         </div>
     );
 };

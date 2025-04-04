@@ -1,8 +1,11 @@
+//main.tsx
 import './index.css'
 import { StrictMode } from 'react'
 import { Home } from './pages/home/home'
 import { createRoot } from 'react-dom/client'
 import { Presentation } from './pages/presentation/presentation'
+import { JoinRoom } from './pages/joinRoom/joinRoom'
+import { PresentationViewer } from './pages/presentationViewer/presentationViewer'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 const router = createBrowserRouter([
@@ -13,6 +16,14 @@ const router = createBrowserRouter([
   {
     path: "/presentation",
     element: <Presentation />,
+  },
+  {
+    path: "/join",
+    element: <JoinRoom />,
+  },
+  {
+    path: "/view/:roomId", 
+    element: <PresentationViewer />,
   },
 ])
 
