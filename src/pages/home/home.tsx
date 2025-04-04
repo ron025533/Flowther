@@ -9,7 +9,7 @@ export const Home = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [roomCode, setRoomCode] = useState("");
     const [newPresentation, setNewPresentation] = useState<Presentation>({
-        _id: "",
+        _id: null,
         author: "",
         title: "",
         content: [{ section: "", order: 0, content: "" }]

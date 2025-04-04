@@ -1,5 +1,5 @@
 export type Presentation = {
-    _id: string;
+    _id: string|null;
     author: string;
     title: string;
     content: Content[];
