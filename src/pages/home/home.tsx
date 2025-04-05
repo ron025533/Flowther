@@ -74,7 +74,15 @@ export const Home = () => {
                         value={roomCode}
                         onChange={(e) => setRoomCode(e.target.value)}
                     />
-                    <a href={`/view/${roomCode}`} className="enter-icon">
+                    <a 
+                        href={roomCode ? `/view/${roomCode}` : "#"} 
+                        className={`enter-icon ${!roomCode ? "disabled" : ""}`}
+                        onClick={(e) => {
+                            if (!roomCode) {
+                                e.preventDefault();
+                            }
+                        }}
+                    >
                         <ArrowUpRight />
                     </a>
                 </div>

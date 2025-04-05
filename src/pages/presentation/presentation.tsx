@@ -265,7 +265,7 @@ export const Presentation = () => {
             </div>
 
             {pages.map((page, index) => (
-                <div key={page.id} style={{ display: currentPage === index ? 'block' : 'none' }}>
+                <div className="text-container" key={page.id} style={{ display: currentPage === index ? 'block' : 'none' }}>
                     <input
                         type="text"
                         placeholder="Nom de la section"

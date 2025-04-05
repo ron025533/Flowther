@@ -1,4 +1,8 @@
 .home {
+    display: flex;
+    flex-direction: column;
+    padding: 2% 6%;
+
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -12,7 +16,7 @@
         z-index: 1000;
         backdrop-filter: blur(5px);
     }
-    
+
     .modal-content {
         background-color: white;
         border-radius: 8px;
@@ -22,36 +26,37 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         animation: modal-appear 0.3s ease-out;
     }
-    
+
     @keyframes modal-appear {
         from {
             opacity: 0;
             transform: translateY(-20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
         }
     }
-    
+
     .modal-content h2 {
         margin-top: 0;
         margin-bottom: 20px;
         color: #333;
         font-size: 24px;
     }
-    
+
     .form-group {
         margin-bottom: 20px;
     }
-    
+
     .form-group label {
         display: block;
         margin-bottom: 8px;
         font-weight: 500;
         color: #555;
     }
-    
+
     .form-group input {
         width: 90%;
         font-size: 18px;
@@ -63,20 +68,20 @@
         font-family: 'DM Sans';
         font-weight: 400;
     }
-    
+
     .form-group input:focus {
         border-color: #0066ff;
         outline: none;
         box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
     }
-    
+
     .form-buttons {
         display: flex;
         justify-content: flex-end;
         gap: 12px;
         margin-top: 30px;
     }
-    
+
     .submit-btn {
         font-family: 'DM Sans';
         font-weight: 600;
@@ -88,14 +93,14 @@
         transition: all 0.14s ease-in-out;
         border: none;
     }
-    
+
     .submit-btn:hover {
         background-color: #ae4bff;
         color: white;
         cursor: pointer;
         scale: 1.05;
     }
-    
+
     .cancel-btn {
         font-family: 'DM Sans';
         font-weight: 600;
@@ -107,29 +112,20 @@
         transition: all 0.14s ease-in-out;
         border: none;
     }
-    
+
     .cancel-btn:hover {
         background-color: #492369;
         color: white;
         cursor: pointer;
         scale: 1.05;
     }
-    
+
     .no-presentations {
         text-align: center;
         padding: 30px;
         color: #777;
         font-style: italic;
     }
-    
-    
-    
-    
-    
-    
-    display: flex;
-    flex-direction: column;
-    padding: 2% 6%;
 
     .home-title {
         font-size: 46px;
@@ -151,11 +147,13 @@
             font-family: 'DM Sans';
             font-weight: 600;
             font-size: 18px;
-            padding: 12px 24px;
+            padding: 22px 34px;
             border-radius: 50px;
             background-color: #f5f5f5;
             color: #ae4bff;
+            white-space: nowrap;
             transition: all 0.14s ease-in-out;
+            user-select: none;
         }
 
         .new-button:hover {
@@ -173,10 +171,15 @@
             color: #ae4bff;
             display: flex;
             align-items: center;
+            width: fit-content;
+            padding: 0;
+            user-select: none;
+            cursor: default;
+            justify-content: space-between;
 
             .code-field {
                 font-size: 18px;
-                padding: 12px 24px;
+                padding: 22px 34px;
                 border-radius: 50px;
                 border: none;
                 outline: none;
@@ -189,12 +192,14 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 38px;
-                width: 38px;
+                height: 54px;
+                width: 54px;
+                min-height: 54px;
+                width: 54px;
                 border-radius: 50px;
                 background-color: var(--black-color);
                 color: white;
-                margin-right: 6px;
+                margin-right: 8px;
                 transition: all 0.14s ease-in-out;
             }
 
@@ -202,10 +207,21 @@
                 scale: 1.1;
                 background-color: #ae4bff;
             }
+
+            .enter-icon.disabled {
+                background-color: var(--black-color);
+                opacity: 0.5;
+                cursor: default;
+            }
+
+            .enter-icon.disabled:hover {
+                scale: 1;
+                background-color: var(--black-color);
+            }
         }
 
         .join-button:focus-within {
-            outline: 2px solid var(--black-color);
+            outline: 2px solid #1e1e1e2c;
         }
     }
 
@@ -214,11 +230,11 @@
         margin-top: 52px;
         gap: 45px;
         flex-wrap: wrap;
-        row-gap: 32px;
         padding-bottom: 3%;
+        justify-content: space-between;
 
         .presentation-item {
-            width: 564px;
+            width: 48%;
 
             .presentation-creator {
                 padding-bottom: 12px;
@@ -227,7 +243,7 @@
 
             .presentation-block {
                 width: 100%;
-                height: 316px;
+                height: 48vh;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -237,11 +253,24 @@
                 background-color: #f5f5f5;
                 user-select: none;
                 text-decoration: none;
+                opacity: 0.5;
+                color: var(--black-color);
+                transition: all 0.1s ease-in-out;
             }
 
             .presentation-block:hover {
                 outline: 4px solid #ae4bff;
                 cursor: pointer;
+                text-decoration: none;
+                opacity: 1;
+                color: var(--black-color);
+            }
+
+            .presentation-block:active {
+                scale: 0.9;
+                background-color: #ae4bff;
+                color: white;
+                border: none;
             }
         }
     }
@@ -271,6 +300,20 @@
             padding-top: 4%;
             gap: 16px;
             margin-bottom: 6%;
+
+            .join-button {
+                width: 100%;
+
+                .enter-icon {
+                    min-width: 17%;
+                    min-width: 54px;
+                    max-width: 54px;
+                }
+
+                .code-field {
+                    width: 83%;
+                }
+            }
         }
 
         .presentation-list {

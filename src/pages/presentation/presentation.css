@@ -30,6 +30,10 @@
         }
     }
 
+    .text-container {
+        width: 100%;
+    }
+
     .section-name {
         width: 88%;
         font-family: 'IBM Plex Serif Bold';
@@ -43,7 +47,7 @@
 
     .section-perfect-presentation {
         width: 88%;
-        padding: 0 6%;
+        padding: 0 6% 12% 6%;
         min-height: 77vh;
         border: 1px solid #e0e0e0;
         position: relative;
