@@ -4,11 +4,41 @@
     font-weight: 500;
 }
 
-  .presentation {
+.presentation {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: fit-content;
+
+    .presentation-info {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        position: fixed;
+        left: 5%;
+        bottom: 0;
+        z-index: 1;
+        background-color: white;
+        width: 100%;
+
+        h1 {
+            margin-right: 12px;
+        }
+
+        img {
+            width: 32px;
+            margin-right: 10px;
+        }
+    }
+
+    .page-indicator {
+        position: fixed;
+        color: #1e1e1e;
+        right: 4%;
+        bottom: 5%;
+        font-weight: 600;
+        z-index: 2;
+    }
 
     .toolbar {
         display: flex;

@@ -8,10 +8,11 @@ import { Copy } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { SOCKET_URL } from "../../constants";
-import { findById, update } from "../../services/presentation"; // Importez update
+import { findById, update } from "../../services/presentation";
 import { Presentation as PresentationType } from "../../types/presentation";
+import Flowther from "../../assets/Flowther.svg";
 
-export const Presentation = () => {
+    export const Presentation = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [pages, setPages] = useState([{ id: 0, sectionName: "", content: "" }]);
     const socketRef = useRef<Socket | null>(null);
@@ -116,7 +117,7 @@ export const Presentation = () => {
         const currentContentEditable = contentEditableRefs.current[currentPage];
         if (currentContentEditable) {
             const content = currentContentEditable.innerHTML;
-            
+
             const updatedPages = [...pages];
             updatedPages[currentPage] = {
                 ...updatedPages[currentPage],
@@ -136,34 +137,34 @@ export const Presentation = () => {
         try {
             // Sauvegarder d'abord la page actuelle
             saveCurrentPageContent();
-            
+
             // Préparer les données pour la mise à jour
             const updatedContent = pages.map(page => ({
                 section: page.sectionName,
                 content: page.content
             }));
-            
+
             const updatedPresentation = {
                 ...presentationData,
                 content: updatedContent
             };
-            
+
             setSaveStatus("Sauvegarde en cours...");
-            
+
             // Appeler l'API pour mettre à jour la présentation
             await update(presentationIdRef.current, updatedPresentation);
-            
+
             setSaveStatus("Sauvegardé!");
-            
+
             // Effacer le message de statut après 3 secondes
             setTimeout(() => {
                 setSaveStatus(null);
             }, 3000);
-            
+
         } catch (err) {
             console.error("Erreur lors de la sauvegarde:", err);
             setSaveStatus("Erreur de sauvegarde");
-            
+
             // Effacer le message d'erreur après 3 secondes
             setTimeout(() => {
                 setSaveStatus(null);
@@ -223,10 +224,15 @@ export const Presentation = () => {
         <div className="presentation">
             {presentationData && (
                 <div className="presentation-info">
+                    <img src={Flowther} alt="Flowther" />
                     <h1>{presentationData.title}</h1>
                     <p>par {presentationData.author}</p>
                 </div>
             )}
+
+            <div className="page-indicator">
+                {currentPage + 1} / {pages.length}
+            </div>
 
             <div className="toolbar">
                 <div
@@ -258,10 +264,6 @@ export const Presentation = () => {
                 <div className="toolbar-button" onClick={deleteCurrentPage}>
                     <Trash2 />
                 </div>
-            </div>
-
-            <div className="page-indicator">
-                Page {currentPage + 1} / {pages.length}
             </div>
 
             {pages.map((page, index) => (
