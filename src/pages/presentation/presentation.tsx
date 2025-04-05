@@ -124,7 +124,9 @@ import Flowther from "../../assets/Flowther.svg";
                 content: content
             };
             setPages(updatedPages);
+            return updatedPages; // Retourner les pages mises à jour
         }
+        return pages; // Retourner les pages actuelles si pas de mise à jour
     };
 
     // Fonction pour sauvegarder la présentation complète
@@ -135,11 +137,12 @@ import Flowther from "../../assets/Flowther.svg";
         }
 
         try {
-            // Sauvegarder d'abord la page actuelle
-            saveCurrentPageContent();
-
+            // Sauvegarder d'abord la page actuelle et récupérer les pages mises à jour
+            const updatedPages = saveCurrentPageContent();
+            
             // Préparer les données pour la mise à jour
-            const updatedContent = pages.map(page => ({
+            const updatedContent = updatedPages.map(page => ({
+                order: null,
                 section: page.sectionName,
                 content: page.content
             }));
@@ -175,7 +178,8 @@ import Flowther from "../../assets/Flowther.svg";
     const goToNextPage = () => {
         if (currentPage < pages.length - 1) {
             // Sauvegarder le contenu actuel avant de changer de page
-            saveCurrentPageContent();
+            const updatedPages = saveCurrentPageContent();
+            setPages(updatedPages); // Mettre à jour l'état avec les pages mises à jour
             setCurrentPage(currentPage + 1);
         }
     };
@@ -183,7 +187,8 @@ import Flowther from "../../assets/Flowther.svg";
     const goToPreviousPage = () => {
         if (currentPage > 0) {
             // Sauvegarder le contenu actuel avant de changer de page
-            saveCurrentPageContent();
+            const updatedPages = saveCurrentPageContent();
+            setPages(updatedPages); // Mettre à jour l'état avec les pages mises à jour
             setCurrentPage(currentPage - 1);
         }
     };
@@ -191,17 +196,19 @@ import Flowther from "../../assets/Flowther.svg";
     const addNewPage = () => {
         if (pages.length < 10) {
             // Sauvegarder le contenu actuel avant d'ajouter une nouvelle page
-            saveCurrentPageContent();
-            setPages([...pages, { id: pages.length, sectionName: "", content: "" }]);
+            const updatedPages = saveCurrentPageContent();
+            setPages([...updatedPages, { id: pages.length, sectionName: "", content: "" }]);
             setCurrentPage(pages.length);
         }
     };
 
     const deleteCurrentPage = () => {
         if (pages.length > 1) {
-            const updatedPages = pages.filter((_, index) => index !== currentPage);
-            setPages(updatedPages);
-            if (currentPage === pages.length - 1) {
+            // Sauvegarder d'abord le contenu actuel
+            const updatedPages = saveCurrentPageContent();
+            const pagesAfterDeletion = updatedPages.filter((_, index) => index !== currentPage);
+            setPages(pagesAfterDeletion);
+            if (currentPage === updatedPages.length - 1) {
                 setCurrentPage(currentPage - 1);
             }
         }

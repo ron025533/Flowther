@@ -7,6 +7,6 @@ export type Presentation = {
 
 export type Content = {
     section: string;
-    order: number;
+    order: number|null;
     content: string;
 }
