@@ -4,7 +4,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'DM Sans';
-  background-color: #fffefc;
 
   --black-color: #0C0C0C;
 }
@@ -21,6 +20,11 @@ body {
 @font-face {
   font-family: 'IBM Plex Serif Bold';
   src: url('./assets/fonts/IBMPlexSerif-BoldItalic.ttf');
+}
+
+@font-face {
+  font-family: 'Inconsolata';
+  src: url('/src/assets/fonts/Inconsolata-VariableFont_wdth\,wght.ttf');
 }
 
 ::selection {

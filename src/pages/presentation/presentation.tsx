@@ -2,17 +2,20 @@ import "./presentation.css";
 import { ArrowRight } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import { CheckCheck } from "lucide-react";
+import { Import } from "lucide-react";
 import { SquarePlus } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { Copy } from "lucide-react";
+import { Check } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { SOCKET_URL } from "../../constants";
 import { findById, update } from "../../services/presentation";
 import { Presentation as PresentationType } from "../../types/presentation";
 import Flowther from "../../assets/Flowther.svg";
+import SwipeDetector from "../../components/SwipeDetector";
 
-    export const Presentation = () => {
+export const Presentation = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [pages, setPages] = useState([{ id: 0, sectionName: "", content: "" }]);
     const socketRef = useRef<Socket | null>(null);
@@ -20,11 +23,11 @@ import Flowther from "../../assets/Flowther.svg";
     const [presentationData, setPresentationData] = useState<PresentationType | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [saveStatus, setSaveStatus] = useState<string | null>(null); // État pour afficher le statut de sauvegarde
+    const [saveStatus, setSaveStatus] = useState<string | null>(null);
     const contentEditableRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-    const presentationIdRef = useRef<string | null>(null); // Pour stocker l'ID de la présentation
+    const presentationIdRef = useRef<string | null>(null);
+    const [copied, setCopied] = useState(false)
 
-    // Récupérer l'ID de la présentation à partir de l'URL
     useEffect(() => {
         const pathSegments = window.location.pathname.split('/');
         const presentationId = pathSegments[pathSegments.length - 1];
@@ -35,7 +38,6 @@ import Flowther from "../../assets/Flowther.svg";
         }
     }, []);
 
-    // Fonction pour charger les données de la présentation
     const loadPresentation = async (id: string) => {
         try {
             setLoading(true);
@@ -80,11 +82,27 @@ import Flowther from "../../assets/Flowther.svg";
     const handleSectionNameChange = (e: React.ChangeEvent<HTMLInputElement>, pageIndex: number) => {
         const newSectionName = e.target.value;
 
+        // Sauvegarder d'abord le contenu actuel de la page en cours d'édition
+        const currentContentEditable = contentEditableRefs.current[currentPage];
+        let currentContent = pages[currentPage].content;
+
+        if (currentContentEditable && currentPage === pageIndex) {
+            currentContent = currentContentEditable.innerHTML;
+        }
+
         const updatedPages = [...pages];
+        // Mettre à jour le nom de la section
         updatedPages[pageIndex] = {
             ...updatedPages[pageIndex],
             sectionName: newSectionName
         };
+
+        // Mettre à jour également le contenu de la page actuelle
+        updatedPages[currentPage] = {
+            ...updatedPages[currentPage],
+            content: currentContent
+        };
+
         setPages(updatedPages);
 
         if (pageIndex === currentPage && socketRef.current) {
@@ -112,7 +130,6 @@ import Flowther from "../../assets/Flowther.svg";
         div.setAttribute('data-empty', content.trim() === '' ? 'true' : 'false');
     };
 
-    // Fonction pour sauvegarder le contenu de la page actuelle
     const saveCurrentPageContent = () => {
         const currentContentEditable = contentEditableRefs.current[currentPage];
         if (currentContentEditable) {
@@ -129,7 +146,6 @@ import Flowther from "../../assets/Flowther.svg";
         return pages; // Retourner les pages actuelles si pas de mise à jour
     };
 
-    // Fonction pour sauvegarder la présentation complète
     const savePresentation = async () => {
         if (!presentationData || !presentationIdRef.current) {
             setError("Impossible de sauvegarder: données manquantes");
@@ -137,10 +153,8 @@ import Flowther from "../../assets/Flowther.svg";
         }
 
         try {
-            // Sauvegarder d'abord la page actuelle et récupérer les pages mises à jour
             const updatedPages = saveCurrentPageContent();
-            
-            // Préparer les données pour la mise à jour
+
             const updatedContent = updatedPages.map(page => ({
                 order: null,
                 section: page.sectionName,
@@ -154,12 +168,10 @@ import Flowther from "../../assets/Flowther.svg";
 
             setSaveStatus("Sauvegarde en cours...");
 
-            // Appeler l'API pour mettre à jour la présentation
             await update(presentationIdRef.current, updatedPresentation);
 
             setSaveStatus("Sauvegardé!");
 
-            // Effacer le message de statut après 3 secondes
             setTimeout(() => {
                 setSaveStatus(null);
             }, 3000);
@@ -168,7 +180,6 @@ import Flowther from "../../assets/Flowther.svg";
             console.error("Erreur lors de la sauvegarde:", err);
             setSaveStatus("Erreur de sauvegarde");
 
-            // Effacer le message d'erreur après 3 secondes
             setTimeout(() => {
                 setSaveStatus(null);
             }, 3000);
@@ -216,8 +227,35 @@ import Flowther from "../../assets/Flowther.svg";
 
     const copyRoomIdToClipboard = () => {
         navigator.clipboard.writeText(roomId);
-        alert("Code de room copié dans le presse-papier!");
+        setCopied(true);
+        setTimeout(() => {
+            setCopied(false);
+        }, 2000);
     };
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const isSaveShortcut = (isMac && e.metaKey && e.key === 's') || (!isMac && e.ctrlKey && e.key === 's');
+
+            if (isSaveShortcut) {
+                e.preventDefault(); // Empêche l'ouverture de la fenêtre de sauvegarde du navigateur
+                savePresentation(); // Appelle ta fonction
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [savePresentation]);
+
+    useEffect(() => {
+        if (pages[currentPage]) {
+            document.title = `${presentationData?.title} - ${pages[currentPage].sectionName}` || "Présentation";  // Si la section a un nom, l'afficher, sinon "Présentation"
+        }
+    }, [currentPage, pages]);
 
     if (loading) {
         return <div className="loading">Chargement de la présentation...</div>;
@@ -226,6 +264,7 @@ import Flowther from "../../assets/Flowther.svg";
     if (error) {
         return <div className="error">{error}</div>;
     }
+
 
     return (
         <div className="presentation">
@@ -244,23 +283,24 @@ import Flowther from "../../assets/Flowther.svg";
             <div className="toolbar">
                 <div
                     onClick={goToPreviousPage}
-                    className={`toolbar-button ${currentPage === 0 ? "disabled" : ""}`}
+                    className={`toolbar-button reshide ${currentPage === 0 ? "disabled" : ""}`}
                 >
                     <ArrowLeft />
                 </div>
                 <div
                     onClick={goToNextPage}
-                    className={`toolbar-button ${currentPage === pages.length - 1 ? "disabled" : ""}`}
+                    className={`toolbar-button reshide ${currentPage === pages.length - 1 ? "disabled" : ""}`}
                 >
                     <ArrowRight />
                 </div>
                 <div className="code">
                     <div className="code-item">{roomId}</div>
-                    <div onClick={copyRoomIdToClipboard}><Copy /></div>
+                    <div className="code-copy" onClick={copyRoomIdToClipboard}>
+                        {copied ? <Check /> : <Copy />}
+                    </div>
                 </div>
                 <div className="toolbar-button" onClick={savePresentation}>
-                    <CheckCheck />
-                    {saveStatus && <span className="save-status">{saveStatus}</span>}
+                    {saveStatus ? <CheckCheck color="#ae4bff" /> : <Import />}
                 </div>
                 <div
                     className={`toolbar-button ${pages.length >= 10 ? "disabled" : ""}`}
@@ -275,23 +315,29 @@ import Flowther from "../../assets/Flowther.svg";
 
             {pages.map((page, index) => (
                 <div className="text-container" key={page.id} style={{ display: currentPage === index ? 'block' : 'none' }}>
-                    <input
-                        type="text"
-                        placeholder="Nom de la section"
-                        className="section-name"
-                        value={page.sectionName}
-                        onChange={(e) => handleSectionNameChange(e, index)}
-                    />
-                    <div
-                        className="section-perfect-presentation"
-                        contentEditable
-                        data-placeholder="넌 최고야, 항상처럼 확실해."
-                        onInput={handleContentChange}
-                        spellCheck={false}
-                        dangerouslySetInnerHTML={{ __html: page.content }}
-                        ref={el => contentEditableRefs.current[index] = el}
+
+                    <SwipeDetector
+                        onSwipeLeft={goToNextPage}
+                        onSwipeRight={goToPreviousPage}
                     >
-                    </div>
+                        <input
+                            type="text"
+                            placeholder="Nom de la section"
+                            className="section-name"
+                            value={page.sectionName}
+                            onChange={(e) => handleSectionNameChange(e, index)}
+                        />
+                        <div
+                            className="section-perfect-presentation"
+                            contentEditable
+                            data-placeholder="넌 최고야, 항상처럼 확실해."
+                            onInput={handleContentChange}
+                            spellCheck={false}
+                            dangerouslySetInnerHTML={{ __html: page.content }}
+                            ref={el => contentEditableRefs.current[index] = el}
+                        >
+                        </div>
+                    </SwipeDetector>
                 </div>
             ))}
         </div>

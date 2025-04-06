@@ -45,15 +45,23 @@ export const Home = () => {
                 content: [{ section: "", order: 0, content: "" }]
             };
 
-            const createdPresentation = await create(presentationToCreate);
-            setPresentations([...presentations, createdPresentation]);
-            setNewPresentation({
-                _id: "",
-                author: "",
-                title: "",
-                content: [{ section: "", order: 0, content: "" }]
-            });
-            setShowCreateModal(false);
+            await create(presentationToCreate);
+
+            // Récupérer la liste mise à jour des présentations
+            const updatedPresentations = await findAll();
+            setPresentations(updatedPresentations);
+
+            // Trouver la présentation qui correspond à celle que nous venons de créer
+            const latestPresentation = updatedPresentations.find(
+                p => p.title === newPresentation.title && p.author === newPresentation.author
+            );
+
+            if (latestPresentation && latestPresentation._id) {
+                window.location.href = `/presentation/${latestPresentation._id}`;
+            } else {
+                console.error("Impossible de trouver la présentation nouvellement créée");
+                setShowCreateModal(false);
+            }
         } catch (error) {
             console.error("Erreur lors de la création de la présentation:", error);
         }
@@ -74,8 +82,8 @@ export const Home = () => {
                         value={roomCode}
                         onChange={(e) => setRoomCode(e.target.value)}
                     />
-                    <a 
-                        href={roomCode ? `/view/${roomCode}` : "#"} 
+                    <a
+                        href={roomCode ? `/view/${roomCode}` : "#"}
                         className={`enter-icon ${!roomCode ? "disabled" : ""}`}
                         onClick={(e) => {
                             if (!roomCode) {
@@ -92,7 +100,7 @@ export const Home = () => {
             {showCreateModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h2>Nouvelle présentation</h2>
+                        <h2><span>Nouvelle</span><br />présentation</h2>
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <input
