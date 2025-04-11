@@ -123,6 +123,10 @@
     }
 }
 
+.edit-control {
+    display: none;
+}
+
 @media (max-width: 768px) {
     body {
         width: 100%;
@@ -190,6 +194,20 @@
             p {
                 padding-top: 2px;
             }
+        }
+
+        .edit-control {
+            display: flex;
+            position: fixed;
+            color: #1e1e1e;
+            left: 4%;
+            font-weight: 600;
+            gap: 16px;
+            z-index: 2;
+            position: fixed;
+            bottom: 10%;
+            backdrop-filter: blur(100px);
+            padding: 3% 6%;
         }
     }
 }

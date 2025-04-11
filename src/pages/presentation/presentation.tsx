@@ -1,6 +1,8 @@
 import "./presentation.css";
 import { ArrowRight } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
+import { Undo2 } from "lucide-react";
+import { Redo2 } from "lucide-react";
 import { CheckCheck } from "lucide-react";
 import { Import } from "lucide-react";
 import { SquarePlus } from "lucide-react";
@@ -275,6 +277,11 @@ export const Presentation = () => {
                     <p>par {presentationData.author}</p>
                 </div>
             )}
+
+            <div className="edit-control">
+            <Undo2 onClick={()=> document.execCommand('undo')} />
+            <Redo2 onClick={()=> document.execCommand('redo')} />
+            </div>
 
             <div className="page-indicator">
                 {currentPage + 1} / {pages.length}
