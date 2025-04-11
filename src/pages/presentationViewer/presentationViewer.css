@@ -8,6 +8,7 @@
 .view-header {
     display: flex;
     justify-content: space-between;
+    /* background-color: #2ecc71; */
     align-items: center;
     margin-bottom: 2rem;
 }
